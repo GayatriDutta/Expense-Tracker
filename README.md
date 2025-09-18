@@ -1,69 +1,34 @@
-# React + TypeScript + Vite
+# Full-Stack Expense Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A comprehensive **full-stack Expense Tracker** application built with **React (frontend)** and **NestJS (backend)**.  
+Track, visualize, and manage your expenses with real-time updates, budgets, recurring payments, and beautiful interactive dashboards.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Core Features
 
-## Expanding the ESLint configuration
+### Authentication & User Management
+- JWT-based authentication with login/register
+- User profiles with name and email
+- Secure password hashing using **bcrypt**
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Expense Management
+- Add, edit, delete expenses (amount, category, date, notes)
+- Filter by date range and category
+- Real-time expense tracking
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Categories
+- 9 predefined categories (Food, Travel, Shopping, etc.)
+- Custom category creation
+- Color-coded categorization
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Analytics & Dashboard
+- Interactive **pie charts** for category breakdown
+- **Bar charts** for spending trends over time
+- Top 3 spending categories highlighted
+- Monthly, weekly, and daily summaries
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Budget Features
+- Set monthly budgets with progress tracking
+- Green/yellow/red alerts for budget status
+- Visual p
