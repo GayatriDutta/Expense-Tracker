@@ -31,4 +31,52 @@ Track, visualize, and manage your expenses with real-time updates, budgets, recu
 ### Budget Features
 - Set monthly budgets with progress tracking
 - Green/yellow/red alerts for budget status
-- Visual p
+- Visual progress bars
+
+### Recurring Expenses
+- Auto-add rent, subscriptions, etc.
+- Daily/weekly/monthly/yearly frequencies
+- Automated processing with **cron jobs**
+
+### Additional Features
+- **Dark Mode** toggle
+- Export data as CSV
+- Mobile responsive design
+- Real-time data synchronization
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+- **React 18** with TypeScript  
+- **Tailwind CSS** for styling  
+- **React Router** for navigation  
+- **Axios** for API calls  
+- **Chart.js** for data visualization  
+
+### Backend
+- **NestJS** with TypeScript  
+- **SQLite** database with TypeORM  
+- JWT authentication with Passport  
+- Scheduled tasks for recurring expenses  
+- RESTful API design  
+
+---
+
+## 🎨 Design Highlights
+- Apple-level aesthetics with a **clean, modern interface**  
+- Consistent **8px spacing system**  
+- Comprehensive **color system** with proper contrast ratios  
+- Smooth animations and micro-interactions  
+- Responsive grid layouts for all screen sizes  
+
+---
+
+## 🚀 Running the Application
+
+### Backend
+```bash
+cd backend
+npm install
+npm run start:dev
