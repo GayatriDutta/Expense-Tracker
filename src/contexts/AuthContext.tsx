@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { mockAuth } from '../mocks/user.mock';
+import { loginAPICall, registerAPICall } from '../api/service.api';
 
 export interface User {
   id: string;
@@ -21,11 +22,11 @@ export interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
-  const context = mockAuth;
+  const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
-  return mockAuth;
+  return context;
 };
 
 const API_BASE_URL = 'http://localhost:3001/api';
@@ -59,17 +60,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const login = async (email: string, password: string) => {
-    const response = await axios.post('/auth/login', { email, password });
-    const { access_token, user: userData } = response.data;
+   const login = async (email: string, password: string) => {
+    const response = await loginAPICall(email, password);
+    const { access_token, user: userData } = response;
     
     localStorage.setItem('token', access_token);
     axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
     setUser(userData);
   };
 
-  const register = async (email: string, password: string, name: string) => {
-    const response = await axios.post('/auth/register', { email, password, name });
+  const register = async (name: string, email: string, password: string) => {
+    const response =  await registerAPICall(name, email, password)
     const { access_token, user: userData } = response.data;
     
     localStorage.setItem('token', access_token);

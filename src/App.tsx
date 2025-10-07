@@ -1,14 +1,28 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { ThemeProvider } from './contexts/ThemeContext';
-import Layout from './components/Layout';
-import AuthForm from './components/AuthForm';
-import Dashboard from './pages/Dashboard';
+import React, { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { AuthProvider, useAuth } from "./contexts/AuthContext";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import Layout from "./components/Layout";
+import AuthForm from "./components/AuthForm";
+import Dashboard from "./pages/Dashboard";
+import ExpenseForm from "./components/ExpenseForm";
+import type { Expense } from "./types";
+import ExpenseList from "./components/ExpenseList";
+import RedirectLogin from "./pages/Redirect";
 
 const AuthPage: React.FC = () => {
-  const [mode, setMode] = useState<'login' | 'register'>('login');
-  return <AuthForm mode={mode} onToggleMode={() => setMode(mode === 'login' ? 'register' : 'login')} />;
+  const [mode, setMode] = useState<"login" | "register">("login");
+  return (
+    <AuthForm
+      mode={mode}
+      onToggleMode={() => setMode(mode === "login" ? "register" : "login")}
+    />
+  );
 };
 
 const AppContent: React.FC = () => {
@@ -26,19 +40,42 @@ const AppContent: React.FC = () => {
     return <AuthPage />;
   }
 
-  return (
-    <ThemeProvider>
-      <Layout>
-        <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/add" element={<div>Add Expense Page</div>} />
-          <Route path="/analytics" element={<div>Analytics Page</div>} />
-          <Route path="/settings" element={<div>Settings Page</div>} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Layout>
-    </ThemeProvider>
-  );
+  if (user) {
+    return (
+      <ThemeProvider>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/login" element={<AuthForm mode="login" />} />
+            <Route
+              path="/add"
+              element={
+                <RedirectLogin>
+                  <ExpenseForm />
+                </RedirectLogin>
+              }
+            />
+            <Route
+              path="/analytics"
+              element={
+                <ExpenseList
+                  expenses={[]}
+                  onEdit={function (expense: Expense): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                  onDelete={function (id: string): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                />
+              }
+            />
+            <Route path="/settings" element={<div>Settings Page</div>} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Layout>
+      </ThemeProvider>
+    );
+  }
 };
 
 function App() {
