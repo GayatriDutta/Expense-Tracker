@@ -7,7 +7,7 @@ import axios from 'axios';
 
 
 interface LayoutProps {
-  children: ReactNode; // ✅ must include children
+  children: ReactNode; 
 }
 
 
@@ -16,6 +16,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { darkMode, toggleDarkMode } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
+
+  const logoutUser = () =>{
+    logout(); 
+  }
 
   const handleExport = async () => {
     try {
@@ -98,7 +102,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               </button>
               
               <button
-                onClick={logout}
+                onClick={logoutUser}
                 className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex-1"
               >
                 <LogOut size={18} />
