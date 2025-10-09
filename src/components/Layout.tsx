@@ -1,9 +1,9 @@
-import React, { type ReactNode } from 'react';
-import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
+import React, { useContext, type ReactNode } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { PiggyBank, Home, Plus, BarChart3, Settings, LogOut, Moon, Sun, Download } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { useTheme } from '../contexts/ThemeContext';
 import axios from 'axios';
+import { ThemeContext } from '../contexts/ThemeContext';
 
 
 interface LayoutProps {
@@ -13,9 +13,8 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { user, logout } = useAuth();
-  const { darkMode, toggleDarkMode } = useTheme();
+  const { darkMode, toggleDarkMode } = useContext(ThemeContext);
   const location = useLocation();
-  const navigate = useNavigate();
 
   const logoutUser = () =>{
     logout(); 
@@ -47,17 +46,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   ];
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
-        {/* Sidebar */}
-        <div className="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 shadow-lg">
-          <div className="flex h-16 items-center gap-3 px-6 border-b border-gray-200 dark:border-gray-700">
-            <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
-              <PiggyBank className="text-blue-600 dark:text-blue-400" size={24} />
+    <div className={`min-h-screen ${darkMode ? 'dark' : ''}` }>
+      <div className={`min-h-screen  transition-colors ${darkMode ? 'bg-gray-900 background-dark' : 'bg-gray-50 background'}`}>
+        <div className={`fixed inset-y-0 left-0 z-50 w-64 shadow-lg ${darkMode ? 'bg-gray-800 background-dark' : 'bg-white background'}`}>
+          <div className={`flex h-16 items-center gap-3 px-6 border-b ${darkMode ? 'border-gray-700': 'border-gray-200'}`}>
+            <div className={`p-2 ${darkMode ? 'bg-blue-900': 'bg-blue-100'}rounded-lg`}>
+              <PiggyBank className={`${darkMode ? 'text-blue-400': 'text-blue-600'  }`} size={24} />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white">ExpenseTracker</h1>
-              <p className="text-xs text-gray-600 dark:text-gray-400">Welcome, {user?.name}</p>
+              <h1 className={`text-xl font-bold  ${darkMode ? 'text-white': 'text-gray-900'}`}>ExpenseTracker</h1>
+              <p className={`text-xs  ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Welcome, {user?.name}</p>
             </div>
           </div>
 
@@ -70,8 +68,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   to={item.href}
                   className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors mb-1 ${
                     isActive
-                      ? 'bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300'
-                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                      ? ` ${darkMode ? 'bg-blue-900': 'bg-blue-100'}  ${darkMode ? 'text-blue-300' : 'text-blue-700'}`
+                      : ` ${darkMode ? 'hover:bg-gray-700': 'hover:bg-gray-100'}  ${darkMode ? 'text-blue-300' : 'text-blue-700'}`
                   }`}
                 >
                   <item.icon size={18} />
@@ -81,7 +79,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             })}
           </nav>
 
-          <div className="absolute bottom-0 left-0 right-0 p-3 border-t border-gray-200 dark:border-gray-700">
+          <div className={`absolute bottom-0 left-0 right-0 p-3 border-t  ${ darkMode ? 'border-gray-700': 'border-gray-200' }`}>
             <div className="flex items-center gap-2 mb-3">
               <button
                 onClick={toggleDarkMode}

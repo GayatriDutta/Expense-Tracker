@@ -14,13 +14,14 @@ import ExpenseForm from "./components/ExpenseForm";
 import type { Expense } from "./types";
 import ExpenseList from "./components/ExpenseList";
 import RedirectLogin from "./pages/Redirect";
+import './App.css';
+
 
 const AuthPage: React.FC = () => {
   const [mode, setMode] = useState<"login" | "register">("login");
   return (
     <AuthForm
       mode={mode}
-      onToggleMode={() => setMode(mode === "login" ? "register" : "login")}
     />
   );
 };

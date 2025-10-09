@@ -1,43 +1,31 @@
-import React, { createContext, useContext, useEffect } from 'react';
-import { useAuth } from './AuthContext';
+import React, { createContext, useState, useEffect } from 'react';
 
-interface ThemeContextType {
-  darkMode: boolean;
-  toggleDarkMode: () => void;
-}
+export const ThemeContext = createContext({
+  darkMode: false,
+  toggleDarkMode: () => {},
+});
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    return localStorage.getItem('darkMode') === 'true';
+  });
 
-export const useTheme = () => {
-  const context = useContext(ThemeContext);
-  if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
-};
-
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, updateProfile } = useAuth();
-  const darkMode = user?.darkMode || false;
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    localStorage.setItem('darkMode', String(!darkMode));
+  };
 
   useEffect(() => {
     if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
   }, [darkMode]);
 
-  const toggleDarkMode = async () => {
-    if (user) {
-      await updateProfile(user.name, !darkMode);
-    }
-  };
-
-  const value = {
-    darkMode,
-    toggleDarkMode,
-  };
-
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={{ darkMode, toggleDarkMode }}>
+      {children}
+    </ThemeContext.Provider>
+  );
 };

@@ -1,6 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { mockAuth } from '../mocks/user.mock';
 import { loginAPICall, registerAPICall } from '../api/service.api';
 
 export interface User {
@@ -15,7 +14,6 @@ export interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, name: string) => Promise<void>;
   logout: () => void;
-  updateProfile: (name: string, darkMode: boolean) => Promise<void>;
   loading: boolean;
 }
 
@@ -31,7 +29,6 @@ export const useAuth = () => {
 
 const API_BASE_URL = 'http://localhost:3001/api';
 
-// Configure axios defaults
 axios.defaults.baseURL = API_BASE_URL;
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -84,17 +81,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
   };
 
-  const updateProfile = async (name: string, darkMode: boolean) => {
-    const response = await axios.put('/users/profile', { name, darkMode });
-    setUser(response.data);
-  };
-
   const value = {
     user,
     login,
     register,
     logout,
-    updateProfile,
     loading,
   };
 
