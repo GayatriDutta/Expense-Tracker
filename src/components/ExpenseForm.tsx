@@ -4,11 +4,16 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { createExpenseCall, getAllCategories } from '../api/service.api';
 
+interface Category {
+  id: number;
+  name: string;
+  icon?: string;
+}
 
 const AddExpense: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     amount: '',
