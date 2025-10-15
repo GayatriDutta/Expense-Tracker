@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { loginAPICall, registerAPICall } from '../api/service.api';
+import api from '../api/api';
 
 export interface User {
   id: string;
@@ -39,7 +40,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const token = localStorage.getItem('token');
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      fetchProfile();
+      fetchProfile();     
     } else {
       setLoading(false);
     }
@@ -47,7 +48,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchProfile = async () => {
     try {
-      const response = await axios.get('/users/profile');
+      const response = await api.get('/users/profile');
       setUser(response.data);
     } catch (error) {
       localStorage.removeItem('token');

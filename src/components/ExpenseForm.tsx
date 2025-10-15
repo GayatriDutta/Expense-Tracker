@@ -2,37 +2,37 @@ import React, { useState, useEffect } from 'react';
 import { Plus, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { EXPENSE_CATEGORIES } from '../data/categories';
+import { createExpenseCall, getAllCategories } from '../api/service.api';
 
 
 const AddExpense: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const categories = EXPENSE_CATEGORIES;
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     amount: '',
     description: '',
     note: '',
-    category_id: '',
+    category_id: '1',
     date: new Date().toISOString().split('T')[0],
   });
 
-  // useEffect(() => {
-  //   fetchCategories();
-  // }, []);
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
-  // const fetchCategories = async () => {
-  //   try {
-  //     const data = await categoriesApi.getAll();
-  //     setCategories(data);
-  //     if (data.length > 0) {
-  //       setFormData(prev => ({ ...prev, category_id: data[0].id }));
-  //     }
-  //   } catch (error) {
-  //     console.error('Failed to fetch categories:', error);
-  //   }
-  // };
+  const fetchCategories = async () => {
+    try {
+      const data = await getAllCategories();
+      setCategories(data);
+      if (data.length > 0) {
+        setFormData(prev => ({ ...prev, category_id: data[0].id }));
+      }
+    } catch (error) {
+      console.error('Failed to fetch categories:', error);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,14 +40,14 @@ const AddExpense: React.FC = () => {
 
     setLoading(true);
     try {
-      await expensesApi.create({
-        amount: parseFloat(formData.amount),
-        description: formData.description,
-        note: formData.note,
-        category_id: formData.category_id,
-        date: formData.date,
-        user_id: user.id,
-      });
+      await createExpenseCall(
+        parseFloat(formData.amount),
+        formData.description,
+        formData.note,
+        formData.category_id,
+        formData.date,
+        user.id,
+      );
 
       navigate('/');
     } catch (error) {
@@ -104,7 +104,7 @@ const AddExpense: React.FC = () => {
               >
                 {categories.map((category) => (
                   <option key={category.id} value={category.id}>
-                    {category.icon} {category.label}
+                    {category.icon} {category.name}
                   </option>
                 ))}
               </select>

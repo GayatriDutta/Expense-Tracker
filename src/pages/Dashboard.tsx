@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { DollarSign, TrendingUp, Calendar, PieChart, AlertTriangle, CheckCircle } from 'lucide-react';
-import axios from 'axios';
+import { DollarSign, TrendingUp, Calendar, PieChart} from 'lucide-react';
 import { formatCurrency } from '../utils';
+import api from '../api/api';
 
 interface DashboardStats {
   totalExpenses: number;
   monthlyExpenses: number;
   averageExpense: number;
   topCategory: string;
-  budgetStatus: 'good' | 'warning' | 'danger';
+  // budgetStatus: 'good' | 'warning' | 'danger';
   budgetUsed: number;
-  budgetTotal: number;
+  // budgetTotal: number;
 }
 
 const Dashboard: React.FC = () => {
@@ -24,40 +24,39 @@ const Dashboard: React.FC = () => {
 
   const fetchDashboardData = async () => {
     try {
-      const [expensesRes, analyticsRes, budgetsRes] = await Promise.all([
-        axios.get('/expenses?limit=5'),
-        axios.get('/expenses/analytics?period=monthly'),
-        axios.get(`/budgets?month=${new Date().toISOString().slice(0, 7)}`),
+      const [expensesRes, analyticsRes] = await Promise.all([
+        api.get('/expenses?limit=5'),
+        api.get('/expenses/analytics?period=monthly'),
       ]);
 
       const expenses = expensesRes.data;
       const analytics = analyticsRes.data;
-      const budgets = budgetsRes.data;
 
       const currentMonth = new Date().toISOString().slice(0, 7);
       const monthlyExpenses = expenses
         .filter((expense: any) => expense.date.startsWith(currentMonth))
         .reduce((sum: number, expense: any) => sum + Number(expense.amount), 0);
 
-      const totalBudget = budgets.reduce((sum: number, budget: any) => sum + Number(budget.amount), 0);
+      // const totalBudget = budgets.reduce((sum: number, budget: any) => sum + Number(budget.amount), 0);
       const budgetUsed = monthlyExpenses;
-      const budgetPercentage = totalBudget > 0 ? (budgetUsed / totalBudget) * 100 : 0;
+      // const budgetPercentage = totalBudget > 0 ? (budgetUsed / totalBudget) * 100 : 0;
 
-      let budgetStatus: 'good' | 'warning' | 'danger' = 'good';
-      if (budgetPercentage > 90) budgetStatus = 'danger';
-      else if (budgetPercentage > 75) budgetStatus = 'warning';
+      // let budgetStatus: 'good' | 'warning' | 'danger' = 'good';
+      // if (budgetPercentage > 90) budgetStatus = 'danger';
+      // else if (budgetPercentage > 75) budgetStatus = 'warning';
 
       setStats({
         totalExpenses: analytics.total,
         monthlyExpenses,
         averageExpense: expenses.length > 0 ? analytics.total / expenses.length : 0,
         topCategory: analytics.topCategories[0]?.[0] || 'None',
-        budgetStatus,
         budgetUsed,
-        budgetTotal: totalBudget,
       });
 
       setRecentExpenses(expenses.slice(0, 5));
+
+      console.log(stats);
+      console.log(recentExpenses)
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
     } finally {
