@@ -1,7 +1,7 @@
 import React from 'react';
 import { DollarSign, TrendingUp, Calendar, PieChart } from 'lucide-react';
 import type { Expense } from '../types';
-import { formatCurrency, getCategorySummary, getMonthlySummary } from '../utils';
+import { formatCurrency, getCategorySummary } from '../utils';
 
 interface SummaryProps {
   expenses: Expense[];
@@ -11,7 +11,6 @@ const Summary: React.FC<SummaryProps> = ({ expenses }) => {
   const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
   const avgExpense = expenses.length > 0 ? totalExpenses / expenses.length : 0;
   const categorySummary = getCategorySummary(expenses);
-  const monthlySummary = getMonthlySummary(expenses);
   
   const thisMonth = new Date().toISOString().slice(0, 7);
   const thisMonthExpenses = expenses.filter(

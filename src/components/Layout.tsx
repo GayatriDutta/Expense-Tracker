@@ -1,6 +1,6 @@
 import React, { useContext, type ReactNode } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { PiggyBank, Home, Plus, BarChart3, Settings, LogOut, Moon, Sun, Download, Target } from 'lucide-react';
+import { Link, useLocation, } from 'react-router-dom';
+import { PiggyBank, Home, Plus, BarChart3, LogOut, Moon, Sun, Download, Target } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { ThemeContext } from '../contexts/ThemeContext';

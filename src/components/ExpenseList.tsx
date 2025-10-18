@@ -2,7 +2,6 @@ import React from 'react';
 import { Edit3, Trash2, Calendar, Tag } from 'lucide-react';
 import type { Expense } from '../types';
 import { formatCurrency, formatDate } from '../utils';
-import { getCategoryLabel, getCategoryColor } from '../data/categories';
 
 interface ExpenseListProps {
   expenses: Expense[];
@@ -44,7 +43,7 @@ const ExpenseList: React.FC<ExpenseListProps> = ({
                 <div className="flex items-center gap-3 mb-2">
                   <div
                     className="w-3 h-3 rounded-full"
-                    style={{ backgroundColor: getCategoryColor(expense.category) }}
+                    // style={{ backgroundColor: getCategoryColor(expense.category) }}
                   />
                   <h4 className="text-lg font-medium text-gray-900 truncate">
                     {expense.description}
@@ -57,7 +56,7 @@ const ExpenseList: React.FC<ExpenseListProps> = ({
                 <div className="flex items-center gap-4 text-sm text-gray-500">
                   <div className="flex items-center gap-1">
                     <Tag size={14} />
-                    <span>{getCategoryLabel(expense.category)}</span>
+                    {/* <span>{getCategoryLabel(expense.category)}</span> */}
                   </div>
                   <div className="flex items-center gap-1">
                     <Calendar size={14} />

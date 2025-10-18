@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -11,7 +11,6 @@ import Layout from "./components/Layout";
 import AuthForm from "./components/AuthForm";
 import Dashboard from "./pages/Dashboard";
 import ExpenseForm from "./components/ExpenseForm";
-import type { Expense } from "./types";
 import ExpenseList from "./components/ExpenseList";
 import RedirectLogin from "./pages/Redirect";
 import './App.css';
@@ -20,6 +19,10 @@ import Budgets from "./pages/Budgets";
 
 const AuthPage: React.FC = () => {
   const [mode, setMode] = useState<"login" | "register">("login");
+
+  useEffect(()=>{
+    setMode("login");
+  })
   return (
     <AuthForm
       mode={mode}
@@ -62,7 +65,7 @@ const AppContent: React.FC = () => {
               element={
                 <ExpenseList expenses={[]} onEdit={function (): void {
                   throw new Error("Function not implemented.");
-                } } onDelete={function (id: string): void {
+                } } onDelete={function (): void {
                   throw new Error("Function not implemented.");
                 } }/>
               }

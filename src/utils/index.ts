@@ -1,4 +1,4 @@
-import { format, startOfMonth, endOfMonth, isWithinInterval, parseISO } from 'date-fns';
+import { format, isWithinInterval, parseISO } from 'date-fns';
 import type { Expense, CategorySummary, MonthlySummary } from '../types';
 
 export const formatCurrency = (amount: number): string => {
@@ -18,7 +18,7 @@ export const generateId = (): string => {
 
 export const getCategorySummary = (expenses: Expense[]): CategorySummary[] => {
   const categoryTotals = expenses.reduce((acc, expense) => {
-    acc[expense.category] = (acc[expense.category] || 0) + expense.amount;
+    acc[expense.categoryId] = (acc[expense.categoryId] || 0) + expense.amount;
     return acc;
   }, {} as Record<string, number>);
 
@@ -27,7 +27,7 @@ export const getCategorySummary = (expenses: Expense[]): CategorySummary[] => {
   return Object.entries(categoryTotals).map(([category, amount]) => ({
     category,
     total: amount,
-    count: expenses.filter(e => e.category === category).length,
+    count: expenses.filter(e => e.categoryId === category).length,
     percentage: total > 0 ? (total / total) * 100 : 0,
   }));
 };

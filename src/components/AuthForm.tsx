@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { PiggyBank, Eye, EyeOff } from "lucide-react";
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
 interface AuthFormProps {
