@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000', // Backend URL
+  baseURL: 'VITE_API_URL=https://your-render-backend.onrender.com', 
 });
 
 api.interceptors.request.use(config => {
