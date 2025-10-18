@@ -2,7 +2,7 @@ export interface Expense {
   id: string;
   amount: number;
   description: string;
-  category: string;
+  categoryId: string;
   date: string;
   createdAt: string;
 }
@@ -26,3 +26,10 @@ export interface MonthlySummary {
   total: number;
   count: number;
 }
+
+export interface Budget {
+    amount: number;
+    month: string;
+    categoryId: string ;
+    userId: string;
+};

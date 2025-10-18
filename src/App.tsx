@@ -15,6 +15,7 @@ import type { Expense } from "./types";
 import ExpenseList from "./components/ExpenseList";
 import RedirectLogin from "./pages/Redirect";
 import './App.css';
+import Budgets from "./pages/Budgets";
 
 
 const AuthPage: React.FC = () => {
@@ -59,19 +60,16 @@ const AppContent: React.FC = () => {
             <Route
               path="/analytics"
               element={
-                <ExpenseList
-                  expenses={[]}
-                  onEdit={function (expense: Expense): void {
-                    throw new Error("Function not implemented.");
-                  }}
-                  onDelete={function (id: string): void {
-                    throw new Error("Function not implemented.");
-                  }}
-                />
+                <ExpenseList expenses={[]} onEdit={function (): void {
+                  throw new Error("Function not implemented.");
+                } } onDelete={function (id: string): void {
+                  throw new Error("Function not implemented.");
+                } }/>
               }
             />
             <Route path="/settings" element={<div>Settings Page</div>} />
             <Route path="*" element={<Navigate to="/" replace />} />
+             <Route path="/budgets" element={<Budgets />} />
           </Routes>
         </Layout>
       </ThemeProvider>

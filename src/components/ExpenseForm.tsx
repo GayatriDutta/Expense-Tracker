@@ -107,7 +107,9 @@ const AddExpense: React.FC = () => {
                 onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
                 className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
               >
-                {categories.map((category) => (
+                {categories
+                .filter(category => category.name != 'All Categories')
+                .map((category) => (
                   <option key={category.id} value={category.id}>
                     {category.icon} {category.name}
                   </option>

@@ -1,4 +1,4 @@
-import type { Expense } from "../types";
+import type { Budget, Expense } from "../types";
 import api from "./api";
 
 export const loginAPICall = async (email: string, password: string) => {
@@ -34,23 +34,36 @@ export const createExpenseCall = async (
   return res;
 };
 
-export const getAllCategories = async (): Promise<Expense[]> => {
+export const getAllCategories = async () => {
   const res = await api.get(`/categories`);
   return res.data;
 }
 
 export const getAllExpenses = async (
-  userId: string,
-  filters?: {
-    categoryId?: string;
-    startDate?: string;
-    endDate?: string;
-    limit?: number;
-  }
-): Promise<Expense[]> => {
-  const res = await api.get(`/expenses/${userId}`, { params: filters });
+)=> {
+  const res = await api.get(`/expenses/`);
   return res.data;
 };
+
+export const getAllBudget = async () => {
+  const res = await api.get('/budget');
+  return res.data;
+}
+
+export const updateBudget = async(id: string, budget: Budget) => {
+  const res = await api.patch(`/budget/${id}`, budget);
+  return res.data;
+}
+
+export const createBudget = async(budget: Budget) => {
+  const res = await api.post('/budget', budget);
+  return res.data;
+}
+
+export const deleteBudget = async(id: string) => {
+  const res = await api.delete(`/budget/${id}`);
+  return res.data;
+}
 
 export const getExpenseById = async (
   userId: string,

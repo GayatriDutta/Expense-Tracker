@@ -1,6 +1,6 @@
 import React, { useContext, type ReactNode } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { PiggyBank, Home, Plus, BarChart3, Settings, LogOut, Moon, Sun, Download } from 'lucide-react';
+import { PiggyBank, Home, Plus, BarChart3, Settings, LogOut, Moon, Sun, Download, Target } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { ThemeContext } from '../contexts/ThemeContext';
@@ -10,16 +10,13 @@ interface LayoutProps {
   children: ReactNode; 
 }
 
-
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { user, logout } = useAuth();
   const { darkMode, toggleDarkMode } = useContext(ThemeContext);
   const location = useLocation();
-
   const logoutUser = () =>{
     logout(); 
   }
-
   const handleExport = async () => {
     try {
       const response = await axios.get('/expenses/export', {
@@ -42,7 +39,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     { name: 'Dashboard', href: '/', icon: Home },
     { name: 'Add Expense', href: '/add', icon: Plus },
     { name: 'Analytics', href: '/analytics', icon: BarChart3 },
-    { name: 'Settings', href: '/settings', icon: Settings },
+    { name: 'Budgets', href: '/budgets', icon: Target },
   ];
 
   return (

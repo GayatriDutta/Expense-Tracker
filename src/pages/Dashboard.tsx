@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { DollarSign, TrendingUp, Calendar, PieChart} from 'lucide-react';
+import { DollarSign, TrendingUp, Calendar, PieChart, AlertTriangle, CheckCircle} from 'lucide-react';
 import { formatCurrency } from '../utils';
 import api from '../api/api';
 
@@ -8,13 +8,21 @@ interface DashboardStats {
   monthlyExpenses: number;
   averageExpense: number;
   topCategory: string;
-  // budgetStatus: 'good' | 'warning' | 'danger';
+  budgetStatus: 'good' | 'warning' | 'danger';
   budgetUsed: number;
-  // budgetTotal: number;
+  budgetTotal: number;
 }
 
 const Dashboard: React.FC = () => {
-  const [stats, setStats] = useState<DashboardStats>();
+  const [stats, setStats] = useState<DashboardStats>({
+    totalExpenses:0,
+    monthlyExpenses: 0,
+    averageExpense:0,
+    topCategory: '',
+    budgetStatus: 'good',
+    budgetTotal:0,
+    budgetUsed:0
+  });
   const [recentExpenses, setRecentExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -24,26 +32,29 @@ const Dashboard: React.FC = () => {
 
   const fetchDashboardData = async () => {
     try {
-      const [expensesRes, analyticsRes] = await Promise.all([
+      const [expensesRes, analyticsRes, budgetsRes] = await Promise.all([
         api.get('/expenses?limit=5'),
         api.get('/expenses/analytics?period=monthly'),
+        api.get('/budget')
       ]);
 
       const expenses = expensesRes.data;
       const analytics = analyticsRes.data;
+      const budgets = budgetsRes.data;
 
       const currentMonth = new Date().toISOString().slice(0, 7);
       const monthlyExpenses = expenses
         .filter((expense: any) => expense.date.startsWith(currentMonth))
         .reduce((sum: number, expense: any) => sum + Number(expense.amount), 0);
 
-      // const totalBudget = budgets.reduce((sum: number, budget: any) => sum + Number(budget.amount), 0);
-      const budgetUsed = monthlyExpenses;
-      // const budgetPercentage = totalBudget > 0 ? (budgetUsed / totalBudget) * 100 : 0;
 
-      // let budgetStatus: 'good' | 'warning' | 'danger' = 'good';
-      // if (budgetPercentage > 90) budgetStatus = 'danger';
-      // else if (budgetPercentage > 75) budgetStatus = 'warning';
+      const totalBudget = budgets.reduce((sum: number, budget: any) => sum + Number(budget.amount), 0);
+      const budgetUsed = monthlyExpenses;
+      const budgetPercentage = totalBudget > 0 ? (budgetUsed / totalBudget) * 100 : 0;
+
+      let budgetStatus: 'good' | 'warning' | 'danger' = 'good';
+      if (budgetPercentage > 90) budgetStatus = 'danger';
+      else if (budgetPercentage > 75) budgetStatus = 'warning';
 
       setStats({
         totalExpenses: analytics.total,
@@ -51,12 +62,11 @@ const Dashboard: React.FC = () => {
         averageExpense: expenses.length > 0 ? analytics.total / expenses.length : 0,
         topCategory: analytics.topCategories[0]?.[0] || 'None',
         budgetUsed,
+        budgetStatus,
+        budgetTotal: totalBudget
       });
 
       setRecentExpenses(expenses.slice(0, 5));
-
-      console.log(stats);
-      console.log(recentExpenses)
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error);
     } finally {
@@ -81,7 +91,6 @@ const Dashboard: React.FC = () => {
         </p>
       </div>
 
-      {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
@@ -140,7 +149,7 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Budget Status
+      Budget Status
       {stats?.budgetTotal > 0 && (
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3 mb-4">
@@ -174,7 +183,7 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
         </div>
-      )} */}
+      )}
 
       {/* Recent Expenses */}
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
