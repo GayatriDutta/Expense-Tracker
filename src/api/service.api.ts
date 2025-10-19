@@ -91,10 +91,9 @@ export const updateExpense = async (
 };
 
 export const deleteExpense = async (
-  userId: string,
   id: string
 ): Promise<void> => {
-  await api.delete(`/expenses/${userId}/${id}`);
+  await api.delete(`/expenses/${id}`);
 };
 
 export const getExpenseAnalytics = async (

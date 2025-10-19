@@ -1,3 +1,5 @@
+import type { Category } from "../types";
+
 export const EXPENSE_CATEGORIES = [
   { id: 1, value: "food", label: "Food & Dining", icon: "#EF4444" },
   { id: 2, value: "transportation", label: "Transportation", icon: "#3B82F6" },
@@ -10,12 +12,12 @@ export const EXPENSE_CATEGORIES = [
   { id: 9, value: "other", label: "Other", icon: "#6B7280" },
 ];
 
-export const getCategoryColor = (category: string): string => {
-  const categoryData = EXPENSE_CATEGORIES.find((cat) => cat.value === category);
-  return categoryData?.icon || "#6B7280";
+export const getCategoryColor = (categories: Category[], category: string): string => {
+  const categoryData = categories.find((cat) => cat.id == category);
+  return categoryData?.color || "#6B7280";
 };
 
-export const getCategoryLabel = (category: string): string => {
-  const categoryData = EXPENSE_CATEGORIES.find((cat) => cat.value === category);
-  return categoryData?.label || category;
+export const getCategoryLabel = (categories: Category[], category: string): string => {
+  const categoryData = categories.find((cat) => cat.id == category);
+  return categoryData?.name || category;
 };

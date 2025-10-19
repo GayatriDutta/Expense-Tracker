@@ -12,7 +12,7 @@ import {
 } from 'chart.js';
 import { Pie, Bar } from "react-chartjs-2";
 
-import type { Expense } from '../types';
+import type { Category, Expense } from '../types';
 import { getCategorySummary, getMonthlySummary } from '../utils';
 import { getCategoryColor, getCategoryLabel } from '../data/categories';
 
@@ -28,19 +28,20 @@ ChartJS.register(
 
 interface ChartsProps {
   expenses: Expense[];
+  categories: Category[]
 }
 
-const Charts: React.FC<ChartsProps> = ({ expenses }) => {
+const Charts: React.FC<ChartsProps> = ({ expenses, categories}) => {
   const categorySummary = getCategorySummary(expenses);
   const monthlySummary = getMonthlySummary(expenses);
 
   // Pie Chart Data
   const pieData = {
-    labels: categorySummary.map(cat => getCategoryLabel(cat.category)),
+    labels: categorySummary.map(cat => getCategoryLabel(categories, cat.category)),
     datasets: [
       {
         data: categorySummary.map(cat => cat.amount),
-        backgroundColor: categorySummary.map(cat => getCategoryColor(cat.category)),
+        backgroundColor: categorySummary.map(cat => getCategoryColor(categories, cat.category)),
         borderColor: '#ffffff',
         borderWidth: 2,
         hoverBorderWidth: 3,
