@@ -69,13 +69,6 @@ const LandingPage: React.FC = ({}) => {
                 <br />
                 to track your expenses
               </h2>
-              
-              <div className="flex items-center gap-2 text-yellow-400">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={20} fill="currentColor" />
-                ))}
-                <span className="text-white ml-2">4.9 (2,847 reviews)</span>
-              </div>
             </div>
 
             {/* Features */}
