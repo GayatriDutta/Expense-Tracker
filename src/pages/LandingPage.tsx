@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { PiggyBank, Check, ArrowRight, BarChart3, Shield, Zap, CreditCard, TrendingUp } from 'lucide-react';
 import AuthForm from '../components/AuthForm';
 
-
 const LandingPage: React.FC = ({}) => {
   const [email, setEmail] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -10,6 +9,7 @@ const LandingPage: React.FC = ({}) => {
   const handleGetStarted = (e: React.FormEvent) => {
     e.preventDefault();
   };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-green-900 relative overflow-hidden">
       {/* Animated Background Elements */}
@@ -43,7 +43,7 @@ const LandingPage: React.FC = ({}) => {
       </div>
 
       {/* Header */}
-      <header className="relative z-10 flex items-center justify-between p-6 lg:px-12">
+      <header className="relative z-10 flex flex-wrap items-center justify-between gap-4 p-4 sm:p-6 lg:px-12">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-gradient-to-r from-green-400 to-blue-500 rounded-xl">
             <PiggyBank className="text-white" size={32} />
@@ -59,12 +59,12 @@ const LandingPage: React.FC = ({}) => {
       </header>
 
       {/* Main Content */}
-      <main className="relative z-10 max-w-7xl mx-auto px-6 lg:px-12 pt-12 lg:pt-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 pt-12 lg:pt-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center text-center lg:text-left">
           {/* Left Column - Content */}
-          <div className="space-y-8">
+          <div className="space-y-8 max-w-xl mx-auto lg:mx-0">
             <div className="space-y-6">
-              <h2 className="text-5xl lg:text-6xl font-bold text-white leading-tight">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
                 The <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-400">easiest</span> way
                 <br />
                 to track your expenses
@@ -133,7 +133,7 @@ const LandingPage: React.FC = ({}) => {
             </div>
 
             {/* Email CTA */}
-            <form onSubmit={handleGetStarted} className="flex gap-3">
+            <form onSubmit={handleGetStarted} className="flex flex-col sm:flex-row gap-3">
               <input
                 type="email"
                 placeholder="Enter your email to get started"
@@ -143,7 +143,7 @@ const LandingPage: React.FC = ({}) => {
               />
               <button
                 type="submit"
-                className="bg-gradient-to-r from-green-400 to-green-500 text-white px-8 py-4 rounded-full font-medium hover:from-green-500 hover:to-green-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center gap-2 group"
+                className="w-full sm:w-auto bg-gradient-to-r from-green-400 to-green-500 text-white px-8 py-4 rounded-full font-medium hover:from-green-500 hover:to-green-600 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 group"
               >
                 Get Started
                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
@@ -152,8 +152,8 @@ const LandingPage: React.FC = ({}) => {
           </div>
 
           {/* Right Column - Dashboard Preview */}
-          <div className="relative">
-            <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 shadow-2xl">
+          <div className="relative flex justify-center lg:justify-end mt-12 lg:mt-0">
+            <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 shadow-2xl w-full max-w-md mx-auto">
               {/* Mock Dashboard Header */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
@@ -243,7 +243,7 @@ const LandingPage: React.FC = ({}) => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="text-center group">
               <div className="w-16 h-16 bg-gradient-to-r from-green-400 to-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
                 <BarChart3 className="text-white" size={24} />

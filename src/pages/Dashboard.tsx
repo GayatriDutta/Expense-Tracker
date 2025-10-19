@@ -12,6 +12,28 @@ interface DashboardStats {
   budgetUsed: number;
   budgetTotal: number;
 }
+interface StatCardProps {
+  title: string;
+  value: string;
+  icon: React.ReactNode;
+  color: string;
+}
+
+const StatCard: React.FC<StatCardProps> = ({ title, value, icon, color }) => (
+  <div className="bg-white hover:scale-105 transition-transform duration-300 dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{title}</p>
+        <p className={`text-2xl font-bold text-${color}-600 dark:text-${color}-400`}>
+          {value}
+        </p>
+      </div>
+      <div className={`p-3 bg-${color}-100 dark:bg-${color}-900/20 rounded-full`}>
+        {icon}
+      </div>
+    </div>
+  </div>
+);
 
 const Dashboard: React.FC = () => {
   const [stats, setStats] = useState<DashboardStats>({
@@ -84,141 +106,144 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Dashboard</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">
-          Overview of your financial activity
-        </p>
-      </div>
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+    {/* Header */}
+    <div className="text-center sm:text-left">
+      <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
+        Dashboard
+      </h1>
+      <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm sm:text-base">
+        Overview of your financial activity
+      </p>
+    </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white hover:scale-110 transition-transform duration-300 ease-out dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Expenses</p>
-              <p className="text-2xl font-bold text-red-600 dark:text-red-400">
-                {formatCurrency(stats?.totalExpenses || 0)}
-              </p>
-            </div>
-            <div className="p-3 bg-red-100 dark:bg-red-900/20 rounded-full">
-              <DollarSign className="text-red-600 dark:text-red-400" size={24} />
-            </div>
-          </div>
-        </div>
+    {/* Stats Grid */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Total Expenses */}
+      <StatCard
+        title="Total Expenses"
+        value={formatCurrency(stats.totalExpenses || 0)}
+        icon={<DollarSign className="text-red-600 dark:text-red-400" size={24} />}
+        color="red"
+      />
 
-        <div className="bg-white hover:scale-110 transition-transform duration-300 ease-out dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">This Month</p>
-              <p className="text-2xl font-bold text-orange-600 dark:text-orange-400">
-                {formatCurrency(stats?.monthlyExpenses || 0)}
-              </p>
-            </div>
-            <div className="p-3 bg-orange-100 dark:bg-orange-900/20 rounded-full">
-              <Calendar className="text-orange-600 dark:text-orange-400" size={24} />
-            </div>
-          </div>
-        </div>
+      {/* Monthly */}
+      <StatCard
+        title="This Month"
+        value={formatCurrency(stats.monthlyExpenses || 0)}
+        icon={<Calendar className="text-orange-600 dark:text-orange-400" size={24} />}
+        color="orange"
+      />
 
-        <div className="bg-white hover:scale-110 transition-transform duration-300 ease-out dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Average Expense</p>
-              <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                {formatCurrency(stats?.averageExpense || 0)}
-              </p>
-            </div>
-            <div className="p-3 bg-blue-100 dark:bg-blue-900/20 rounded-full">
-              <TrendingUp className="text-blue-600 dark:text-blue-400" size={24} />
-            </div>
-          </div>
-        </div>
+      {/* Average */}
+      <StatCard
+        title="Average Expense"
+        value={formatCurrency(stats.averageExpense || 0)}
+        icon={<TrendingUp className="text-blue-600 dark:text-blue-400" size={24} />}
+        color="blue"
+      />
 
-        <div className="bg-white hover:scale-110 transition-transform duration-300 ease-out dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Top Category</p>
-              <p className="text-lg font-bold text-purple-600 dark:text-purple-400 truncate">
-                {stats?.topCategory || 'None'}
-              </p>
-            </div>
-            <div className="p-3 bg-purple-100 dark:bg-purple-900/20 rounded-full">
-              <PieChart className="text-purple-600 dark:text-purple-400" size={24} />
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Top Category */}
+      <StatCard
+        title="Top Category"
+        value={stats.topCategory || 'None'}
+        icon={<PieChart className="text-purple-600 dark:text-purple-400" size={24} />}
+        color="purple"
+      />
+    </div>
 
-      {stats?.budgetTotal > 0 && (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center gap-3 mb-4">
+    {/* Budget Section */}
+    {stats.budgetTotal > 0 && (
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+          <div className="flex items-center gap-3">
             {stats.budgetStatus === 'good' && <CheckCircle className="text-green-500" size={24} />}
             {stats.budgetStatus === 'warning' && <AlertTriangle className="text-yellow-500" size={24} />}
             {stats.budgetStatus === 'danger' && <AlertTriangle className="text-red-500" size={24} />}
             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Monthly Budget</h3>
           </div>
-          
-          <div className="space-y-3">
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-600 dark:text-gray-400">
-                {formatCurrency(stats.budgetUsed)} of {formatCurrency(stats.budgetTotal)}
-              </span>
-              <span className={`font-medium ${
-                stats.budgetStatus === 'good' ? 'text-green-600' :
-                stats.budgetStatus === 'warning' ? 'text-yellow-600' : 'text-red-600'
-              }`}>
-                {((stats.budgetUsed / stats.budgetTotal) * 100).toFixed(1)}%
-              </span>
-            </div>
-            
-            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-              <div
-                className={`h-2 rounded-full transition-all ${
-                  stats.budgetStatus === 'good' ? 'bg-green-500' :
-                  stats.budgetStatus === 'warning' ? 'bg-yellow-500' : 'bg-red-500'
-                }`}
-                style={{ width: `${Math.min((stats.budgetUsed / stats.budgetTotal) * 100, 100)}%` }}
-              />
-            </div>
+
+          <div className="text-sm font-medium text-gray-600 dark:text-gray-400">
+            {((stats.budgetUsed / stats.budgetTotal) * 100).toFixed(1)}% used
           </div>
         </div>
-      )}
 
-      {/* Recent Expenses */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Recent Expenses</h3>
-        </div>
-        
-        <div className="divide-y divide-gray-200 dark:divide-gray-700">
-          {recentExpenses.length > 0 ? (
-            recentExpenses.map((expense: any) => (
-              <div key={expense.id} className="p-6 hover:animate-bounce transition dark:hover:bg-gray-700/50 transition-colors">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                      {expense.description}
-                    </h4>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {expense.category?.name} • {new Date(expense.date).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <span className="text-sm font-semibold text-red-600 dark:text-red-400">
-                    -{formatCurrency(expense.amount)}
-                  </span>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="p-8 text-center text-gray-500 dark:text-gray-400">
-              No expenses yet. Start by adding your first expense!
-            </div>
-          )}
+        <div className="space-y-3">
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-600 dark:text-gray-400">
+              {formatCurrency(stats.budgetUsed)} of {formatCurrency(stats.budgetTotal)}
+            </span>
+            <span
+              className={`font-medium ${
+                stats.budgetStatus === 'good'
+                  ? 'text-green-600'
+                  : stats.budgetStatus === 'warning'
+                  ? 'text-yellow-600'
+                  : 'text-red-600'
+              }`}
+            >
+              {((stats.budgetUsed / stats.budgetTotal) * 100).toFixed(1)}%
+            </span>
+          </div>
+
+          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div
+              className={`h-2 rounded-full transition-all duration-500 ${
+                stats.budgetStatus === 'good'
+                  ? 'bg-green-500'
+                  : stats.budgetStatus === 'warning'
+                  ? 'bg-yellow-500'
+                  : 'bg-red-500'
+              }`}
+              style={{
+                width: `${Math.min((stats.budgetUsed / stats.budgetTotal) * 100, 100)}%`,
+              }}
+            />
+          </div>
         </div>
       </div>
+    )}
+
+    {/* Recent Expenses */}
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+      <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white text-center sm:text-left">
+          Recent Expenses
+        </h3>
+      </div>
+
+      <div className="divide-y divide-gray-200 dark:divide-gray-700">
+        {recentExpenses.length > 0 ? (
+          recentExpenses.map((expense: any) => (
+            <div
+              key={expense.id}
+              className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+            >
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                <div className="flex-1 min-w-0 text-center sm:text-left">
+                  <h4 className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                    {expense.description}
+                  </h4>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {expense.category?.name} • {new Date(expense.date).toLocaleDateString()}
+                  </p>
+                </div>
+                <span className="text-sm font-semibold text-red-600 dark:text-red-400">
+                  -{formatCurrency(expense.amount)}
+                </span>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="p-8 text-center text-gray-500 dark:text-gray-400">
+            No expenses yet. Start by adding your first expense!
+          </div>
+        )}
+      </div>
     </div>
-  );
+  </div>
+);
+
 };
 
 export default Dashboard;

@@ -1,28 +1,28 @@
-import React, { useContext, type ReactNode } from 'react';
-import { Link, useLocation, } from 'react-router-dom';
-import { PiggyBank, Home, Plus, BarChart3, LogOut, Moon, Sun, Download, Target } from 'lucide-react';
+import React, { useState, useContext, type ReactNode } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import {
+  PiggyBank, Home, Plus, BarChart3, LogOut,
+  Moon, Sun, Download, Target, Menu, X
+} from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { ThemeContext } from '../contexts/ThemeContext';
 
-
 interface LayoutProps {
-  children: ReactNode; 
+  children: ReactNode;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { user, logout } = useAuth();
   const { darkMode, toggleDarkMode } = useContext(ThemeContext);
   const location = useLocation();
-  const logoutUser = () =>{
-    logout(); 
-  }
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const logoutUser = () => logout();
+
   const handleExport = async () => {
     try {
-      const response = await axios.get('/expenses/export', {
-        responseType: 'blob',
-      });
-      
+      const response = await axios.get('/expenses/export', { responseType: 'blob' });
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -43,18 +43,38 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   ];
 
   return (
-    <div className={`min-h-screen ${darkMode ? 'dark' : ''}` }>
-      <div className={`min-h-screen  transition-colors ${darkMode ? 'bg-gray-900 background-dark' : 'bg-gray-50 background'}`}>
-        <div className={`fixed inset-y-0 left-0 z-50 w-64 shadow-lg ${darkMode ? 'bg-gray-800 background-dark' : 'bg-white background'}`}>
-          <div className={`flex h-16 items-center gap-3 px-6 border-b ${darkMode ? 'border-gray-700': 'border-gray-200'}`}>
-            <div className={` ${darkMode ? 'bg-blue-900': 'bg-blue-100'}rounded-lg`}>
+    <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
+      <div className={`min-h-screen transition-colors ${darkMode ? 'bg-gray-900 background-dark' : 'bg-gray-50 background'}`}>
+
+        {/* Mobile Header */}
+        <div className="md:hidden flex items-center justify-between p-4 border-b border-gray-300 dark:border-gray-700">
+          <div className="flex items-center gap-2">
+            <div className="p-1 flex items-center justify-center bg-gradient-to-r from-green-400 to-blue-500 rounded-xl">
+              <PiggyBank className="text-white" size={28} />
+            </div>
+            <h1 className={`text-lg font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>ExpenseTracker</h1>
+          </div>
+          <button onClick={() => setSidebarOpen(!sidebarOpen)}>
+            {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+
+        {/* Sidebar */}
+        <div
+          className={`fixed inset-y-0 left-0 z-50 w-64 shadow-lg transform 
+            ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
+            md:translate-x-0 transition-transform duration-300 ease-in-out 
+            ${darkMode ? 'bg-gray-800 background-dark' : 'bg-white background'}`}
+        >
+          <div className={`flex h-16 items-center gap-3 px-6 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+            <div className={`${darkMode ? 'bg-blue-900' : 'bg-blue-100'} rounded-lg`}>
               <div className="p-1 flex items-center justify-center bg-gradient-to-r from-green-400 to-blue-500 rounded-xl">
-                    <PiggyBank className="text-white" size={32} />
+                <PiggyBank className="text-white" size={32} />
               </div>
             </div>
             <div>
-              <h1 className={`text-xl font-bold  ${darkMode ? 'text-white': 'text-gray-900'}`}>ExpenseTracker</h1>
-              <p className={`text-xs  ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Welcome, {user?.name}</p>
+              <h1 className={`text-xl font-bold ${darkMode ? 'text-white' : 'text-gray-900'}`}>ExpenseTracker</h1>
+              <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>Welcome, {user?.name}</p>
             </div>
           </div>
 
@@ -67,9 +87,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                   to={item.href}
                   className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors mb-1 ${
                     isActive
-                      ? ` ${darkMode ? 'bg-blue-900': 'bg-blue-100'}  ${darkMode ? 'text-blue-300' : 'text-blue-700'}`
-                      : ` ${darkMode ? 'hover:bg-gray-700': 'hover:bg-gray-100'}  ${darkMode ? 'text-blue-300' : 'text-blue-700'}`
+                      ? `${darkMode ? 'bg-blue-900' : 'bg-blue-100'} ${darkMode ? 'text-blue-300' : 'text-blue-700'}`
+                      : `${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'} ${darkMode ? 'text-blue-300' : 'text-blue-700'}`
                   }`}
+                  onClick={() => setSidebarOpen(false)}
                 >
                   <item.icon size={18} />
                   {item.name}
@@ -78,7 +99,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             })}
           </nav>
 
-          <div className={`absolute bottom-0 left-0 right-0 p-3 border-t  ${ darkMode ? 'border-gray-700': 'border-gray-200' }`}>
+          <div className={`absolute bottom-0 left-0 right-0 p-3 border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
             <div className="flex items-center gap-2 mb-3">
               <button
                 onClick={toggleDarkMode}
@@ -88,7 +109,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 {darkMode ? 'Light Mode' : 'Dark Mode'}
               </button>
             </div>
-            
+
             <div className="flex items-center gap-2">
               <button
                 onClick={handleExport}
@@ -97,7 +118,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <Download size={18} />
                 Export
               </button>
-              
+
               <button
                 onClick={logoutUser}
                 className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex-1"
@@ -109,11 +130,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           </div>
         </div>
 
-        {/* Main content */}
-        <div className="pl-64">
-          {/* <main className="p-8">
-            <Outlet />
-          </main> */}
+        {/* Main Content */}
+        <div className="md:pl-64">
           <main className="flex-1 p-4">{children}</main>
         </div>
       </div>
