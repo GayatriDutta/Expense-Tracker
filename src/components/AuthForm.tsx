@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { PiggyBank, Eye, EyeOff, X } from "lucide-react";
+import { PiggyBank, Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import { loginAPICall, registerAPICall } from "../api/service.api";
+import { registerAPICall } from "../api/service.api";
 import { showSuccess } from "../utils/toast";
 
 interface AuthFormProps {
@@ -20,8 +20,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [pageMode, setPageMode] = useState(mode);
-  const [message, setMessage] = useState("");
-  const { login, register} = useAuth();
+  const { login} = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,12 +74,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
         {error && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
             {error}
-          </div>
-        )}
-
-        {message && (
-          <div className="bg-grey-50 border border-black-600 text-blue-700 px-4 py-3 rounded-lg mb-6">
-            {message}
           </div>
         )}
 
