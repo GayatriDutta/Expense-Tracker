@@ -34,7 +34,7 @@ const Budgets: React.FC = () => {
   const [formData, setFormData] = useState({
     amount: '',
     month: new Date().toISOString().slice(0, 7), 
-    categoryId: '',
+    categoryId: '19',
   });
 
   useEffect(() => {
@@ -161,7 +161,7 @@ const Budgets: React.FC = () => {
         
         <button
           onClick={() => setShowForm(true)}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2"
+          className="bg-gradient-to-r from-green-400 to-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center gap-2"
         >
           <Plus size={20} />
           Add Budget
@@ -233,7 +233,7 @@ const Budgets: React.FC = () => {
             <div className="flex gap-3">
               <button
                 type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                className="bg-gradient-to-r from-green-400 to-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
               >
                 {editingBudget ? 'Update Budget' : 'Create Budget'}
               </button>

@@ -93,7 +93,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-white hover:scale-110 transition-transform duration-300 ease-out dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Expenses</p>
@@ -107,7 +107,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-white hover:scale-110 transition-transform duration-300 ease-out dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">This Month</p>
@@ -121,7 +121,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-white hover:scale-110 transition-transform duration-300 ease-out dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Average Expense</p>
@@ -135,7 +135,7 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
+        <div className="bg-white hover:scale-110 transition-transform duration-300 ease-out dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Top Category</p>
@@ -150,7 +150,6 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      Budget Status
       {stats?.budgetTotal > 0 && (
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 border border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-3 mb-4">
@@ -195,7 +194,7 @@ const Dashboard: React.FC = () => {
         <div className="divide-y divide-gray-200 dark:divide-gray-700">
           {recentExpenses.length > 0 ? (
             recentExpenses.map((expense: any) => (
-              <div key={expense.id} className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+              <div key={expense.id} className="p-6 hover:animate-bounce transition dark:hover:bg-gray-700/50 transition-colors">
                 <div className="flex items-center justify-between">
                   <div className="flex-1 min-w-0">
                     <h4 className="text-sm font-medium text-gray-900 dark:text-white truncate">

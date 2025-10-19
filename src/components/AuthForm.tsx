@@ -7,9 +7,10 @@ import { showSuccess } from "../utils/toast";
 
 interface AuthFormProps {
   mode: "login" | "register";
+  onClose: () => void;
 }
 
-const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
+const AuthForm: React.FC<AuthFormProps> = ({ mode, onClose }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
@@ -20,7 +21,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [pageMode, setPageMode] = useState(mode);
-  const { login} = useAuth();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +31,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
     if (pageMode === "login") {
       try {
         await login(formData.email, formData.password);
-        setError("");
         navigate("/dashboard");
       } finally {
         setLoading(false);
@@ -38,49 +38,67 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
     } else {
       try {
         await registerAPICall(formData.name, formData.email, formData.password);
-        showSuccess("Account Created! Please login.");     
+        showSuccess("Account Created! Please login.");
+        setPageMode("login");
       } finally {
-        setFormData({
-          email: "",
-          password: "",
-          name: "",
-        });
+        setFormData({ email: "", password: "", name: "" });
         setLoading(false);
       }
     }
   };
 
   const toggleMode = () => {
-    setPageMode(pageMode == "login" ? "register" : "login");
+    setPageMode(pageMode === "login" ? "register" : "login");
   };
 
   return (
-    <div className="min-h-screen background from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white/50 rounded-2xl shadow-xl p-8">
+    // 🔹 Overlay (click outside to close)
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      {/* 🔹 Stop click inside from closing modal */}
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative max-w-md w-full bg-white/60 dark:bg-gray-900 rounded-2xl shadow-2xl p-8 transition-all duration-300 transform scale-100"
+      >
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 text-black hover:text-gray-800 dark:hover:text-white text-2xl"
+        >
+          ✕
+        </button>
+
+        {/* Logo & Title */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-            <PiggyBank className="text-blue-600" size={32} />
+          <div className="flex justify-center p-3 gap-3">
+                    <div className="p-2 flex items-center justify-center bg-gradient-to-r from-green-400 to-blue-500 rounded-xl">
+                      <PiggyBank className="text-white" size={32} />
+                    </div>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
             {pageMode === "login" ? "Welcome Back" : "Create Account"}
           </h1>
-          <p className="text-gray-600 mt-2">
+          <p className="text-gray-600 dark:text-gray-400 mt-2">
             {pageMode === "login"
               ? "Sign in to your expense tracker"
               : "Start tracking your expenses today"}
           </p>
         </div>
 
+        {/* Error Message */}
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+          <div className="bg-red-100 text-red-700 px-4 py-2 rounded-lg mb-6">
             {error}
           </div>
         )}
 
+        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {pageMode === "register" && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Full Name
               </label>
               <input
@@ -90,14 +108,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
                 }
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-800 dark:text-white"
                 placeholder="Enter your full name"
               />
             </div>
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Email Address
             </label>
             <input
@@ -107,13 +125,13 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
               onChange={(e) =>
                 setFormData({ ...formData, email: e.target.value })
               }
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
               placeholder="Enter your email"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Password
             </label>
             <div className="relative">
@@ -124,7 +142,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                 onChange={(e) =>
                   setFormData({ ...formData, password: e.target.value })
                 }
-                className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
                 placeholder="Enter your password"
                 minLength={6}
               />
@@ -141,7 +159,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full bg-gradient-to-r from-green-400 to-blue-500 text-white px-6 py-2 rounded-full font-medium hover:from-green-500 hover:to-green-600 transition-all duration-300 shadow-lg hover:shadow-xl py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 disabled:opacity-50 transition-all"
           >
             {loading
               ? "Please wait..."
@@ -151,14 +169,15 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
           </button>
         </form>
 
+        {/* Toggle Login/Register */}
         <div className="mt-6 text-center">
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             {pageMode === "login"
               ? "Don't have an account? "
               : "Already have an account? "}
             <button
-              className="text-blue-600 hover:text-blue-700 font-medium"
-              onClick={() => toggleMode()}
+              className="bg-gradient-to-r from-green-400 to-green-500 text-white px-6 py-2 rounded-full font-medium hover:from-green-500 hover:to-green-600 transition-all duration-300 shadow-lg hover:shadow-xl"
+              onClick={toggleMode}
             >
               {pageMode === "login" ? "Sign up" : "Sign in"}
             </button>

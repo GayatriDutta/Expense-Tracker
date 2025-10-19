@@ -1,6 +1,6 @@
 import React from 'react';
 import { Search, Filter } from 'lucide-react';
-import { EXPENSE_CATEGORIES } from '../data/categories';
+import type { Category } from '../types';
 
 interface FiltersProps {
   searchTerm: string;
@@ -12,6 +12,7 @@ interface FiltersProps {
   endDate: string;
   onEndDateChange: (value: string) => void;
   onClearFilters: () => void;
+  categories: Category[];
 }
 
 const Filters: React.FC<FiltersProps> = ({
@@ -24,6 +25,7 @@ const Filters: React.FC<FiltersProps> = ({
   endDate,
   onEndDateChange,
   onClearFilters,
+  categories,
 }) => {
   const hasActiveFilters = searchTerm || selectedCategory !== 'all' || startDate || endDate;
 
@@ -57,12 +59,12 @@ const Filters: React.FC<FiltersProps> = ({
         <select
           value={selectedCategory}
           onChange={(e) => onCategoryChange(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
         >
           <option value="all">All Categories</option>
-          {EXPENSE_CATEGORIES.map((category) => (
-            <option key={category.value} value={category.value}>
-              {category.label}
+          {categories.map((category) => (
+            <option key={category.id} value={category.id}>
+              {category.icon} {category.name}
             </option>
           ))}
         </select>
@@ -72,7 +74,7 @@ const Filters: React.FC<FiltersProps> = ({
           placeholder="Start date"
           value={startDate}
           onChange={(e) => onStartDateChange(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
         />
 
         <input
@@ -80,7 +82,7 @@ const Filters: React.FC<FiltersProps> = ({
           placeholder="End date"
           value={endDate}
           onChange={(e) => onEndDateChange(e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
         />
       </div>
     </div>

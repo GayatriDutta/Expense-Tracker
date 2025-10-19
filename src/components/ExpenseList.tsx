@@ -1,92 +1,128 @@
-import React from 'react';
-import { Edit3, Trash2, Calendar, Tag } from 'lucide-react';
-import type { Expense } from '../types';
-import { formatCurrency, formatDate } from '../utils';
+import React, { useState, useEffect } from 'react';
+import { BarChart3, } from 'lucide-react';
+import Charts from '../components/Charts';
+import Summary from '../components/Summary';
+import Filters from '../components/Filters';
+import type { Category, Expense } from '../types';
+import { getAllCategories, getAllExpenses } from '../api/service.api';
 
-interface ExpenseListProps {
-  expenses: Expense[];
-  onEdit: (expense: Expense) => void;
-  onDelete: (id: string) => void;
-}
+const Analytics: React.FC = () => {
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [filteredExpenses, setFilteredExpenses] = useState<Expense[]>([]);
+  const [loading, setLoading] = useState(true);
 
-const ExpenseList: React.FC<ExpenseListProps> = ({
-  expenses,
-  onEdit,
-  onDelete,
-}) => {
-  if (expenses.length === 0) {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+    applyFilters();
+  }, [expenses, searchTerm, selectedCategory, startDate, endDate]);
+
+  const fetchData = async () => {
+    try {
+      const expensesData = await getAllExpenses();
+      const categoriesData = await getAllCategories();
+      
+      setExpenses(expensesData);
+      setCategories(categoriesData);
+      setLoading(false);
+    } catch (error) {
+      console.error('Failed to fetch data:', error);
+    } finally {
+      // setLoading(false);
+    }
+  };
+
+  const applyFilters = () => {
+    let filtered = [...expenses];
+
+    if (searchTerm) {
+      filtered = filtered.filter(expense =>
+        expense.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        expense.note?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(expense => expense.categoryId === selectedCategory);
+    }
+
+    if (startDate && endDate) {
+      filtered = filtered.filter(expense => {
+        const expenseDate = new Date(expense.date);
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        return expenseDate >= start && expenseDate <= end;
+      });
+    }
+
+    setFilteredExpenses(filtered);
+  };
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setSelectedCategory('all');
+    setStartDate('');
+    setEndDate('');
+  };
+
+  if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-8 text-center">
-        <div className="text-gray-400 mb-4">
-          <Tag size={48} className="mx-auto" />
-        </div>
-        <p className="text-gray-500 text-lg">No expenses yet</p>
-        <p className="text-gray-400">Start by adding your first expense above</p>
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
     );
   }
-
+  if(filteredExpenses){
   return (
-    <div className="bg-white rounded-lg shadow-md">
-      <div className="px-6 py-4 border-b border-gray-200">
-        <h3 className="text-lg font-semibold text-gray-800">Recent Expenses</h3>
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Analytics</h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-2">
+          Detailed insights into your spending patterns
+        </p>
       </div>
-      
-      <div className="divide-y divide-gray-200">
-        {expenses.map((expense) => (
-          <div
-            key={expense.id}
-            className="p-6 hover:bg-gray-50 transition-colors"
-          >
-            <div className="flex items-start justify-between">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-3 mb-2">
-                  <div
-                    className="w-3 h-3 rounded-full"
-                    // style={{ backgroundColor: getCategoryColor(expense.category) }}
-                  />
-                  <h4 className="text-lg font-medium text-gray-900 truncate">
-                    {expense.description}
-                  </h4>
-                  <span className="text-lg font-semibold text-red-600">
-                    -{formatCurrency(expense.amount)}
-                  </span>
-                </div>
-                
-                <div className="flex items-center gap-4 text-sm text-gray-500">
-                  <div className="flex items-center gap-1">
-                    <Tag size={14} />
-                    {/* <span>{getCategoryLabel(expense.category)}</span> */}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Calendar size={14} />
-                    <span>{formatDate(expense.date)}</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-2 ml-4">
-                <button
-                  onClick={() => onEdit(expense)}
-                  className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                  aria-label="Edit expense"
-                >
-                  <Edit3 size={16} />
-                </button>
-                <button
-                  onClick={() => onDelete(expense.id)}
-                  className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                  aria-label="Delete expense"
-                >
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            </div>
+
+      <Filters
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
+        startDate={startDate}
+        onStartDateChange={setStartDate}
+        endDate={endDate}
+        onEndDateChange={setEndDate}
+        onClearFilters={clearFilters}
+        categories={categories}
+      />
+
+      <Summary expenses={filteredExpenses} />
+
+      <Charts expenses={filteredExpenses} />
+
+      {filteredExpenses.length === 0 && (
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-8 text-center border border-gray-200 dark:border-gray-700">
+          <div className="text-gray-400 dark:text-gray-500 mb-4">
+            <BarChart3 size={48} className="mx-auto" />
           </div>
-        ))}
-      </div>
+          <p className="text-gray-500 dark:text-gray-400 text-lg">No expenses found</p>
+          <p className="text-gray-400 dark:text-gray-500">
+            Try adjusting your filters or add some expenses to see analytics
+          </p>
+        </div>
+      )}
     </div>
   );
+  }
+  
 };
 
-export default ExpenseList;
+export default Analytics;

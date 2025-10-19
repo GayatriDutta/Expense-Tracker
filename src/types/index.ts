@@ -5,6 +5,13 @@ export interface Expense {
   categoryId: string;
   date: string;
   createdAt: string;
+  note?: string;
+}
+
+export interface Category {
+  id: number;
+  name: string;
+  icon?: string;
 }
 
 export interface ExpenseFormData {
@@ -16,7 +23,7 @@ export interface ExpenseFormData {
 
 export interface CategorySummary {
   category: string;
-  total: number;
+  amount: number;
   count: number;
   percentage: number;
 }

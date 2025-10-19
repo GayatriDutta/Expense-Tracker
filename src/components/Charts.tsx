@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,7 +10,8 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import { Bar, Pie } from 'react-chartjs-2';
+import { Pie, Bar } from "react-chartjs-2";
+
 import type { Expense } from '../types';
 import { getCategorySummary, getMonthlySummary } from '../utils';
 import { getCategoryColor, getCategoryLabel } from '../data/categories';
@@ -37,7 +39,7 @@ const Charts: React.FC<ChartsProps> = ({ expenses }) => {
     labels: categorySummary.map(cat => getCategoryLabel(cat.category)),
     datasets: [
       {
-        data: categorySummary.map(cat => cat.total),
+        data: categorySummary.map(cat => cat.amount),
         backgroundColor: categorySummary.map(cat => getCategoryColor(cat.category)),
         borderColor: '#ffffff',
         borderWidth: 2,
@@ -60,8 +62,9 @@ const Charts: React.FC<ChartsProps> = ({ expenses }) => {
       tooltip: {
         callbacks: {
           label: (context: any) => {
-            const percentage = ((context.raw / expenses.reduce((sum, expense) => sum + expense.amount, 0)) * 100).toFixed(1);
-            return `${context.label}: $${context.raw.toFixed(2)} (${percentage}%)`;
+            const value = Number(context.raw);
+            const percentage = ((value/ expenses.reduce((sum, expense) => sum + Number(expense.amount), 0)) * 100).toFixed(1);
+            return `${context.label}: $${value.toFixed(2)} (${percentage}%)`;
           },
         },
       },

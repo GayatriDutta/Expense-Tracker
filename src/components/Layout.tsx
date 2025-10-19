@@ -47,8 +47,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <div className={`min-h-screen  transition-colors ${darkMode ? 'bg-gray-900 background-dark' : 'bg-gray-50 background'}`}>
         <div className={`fixed inset-y-0 left-0 z-50 w-64 shadow-lg ${darkMode ? 'bg-gray-800 background-dark' : 'bg-white background'}`}>
           <div className={`flex h-16 items-center gap-3 px-6 border-b ${darkMode ? 'border-gray-700': 'border-gray-200'}`}>
-            <div className={`p-2 ${darkMode ? 'bg-blue-900': 'bg-blue-100'}rounded-lg`}>
-              <PiggyBank className={`${darkMode ? 'text-blue-400': 'text-blue-600'  }`} size={24} />
+            <div className={` ${darkMode ? 'bg-blue-900': 'bg-blue-100'}rounded-lg`}>
+              <div className="p-1 flex items-center justify-center bg-gradient-to-r from-green-400 to-blue-500 rounded-xl">
+                    <PiggyBank className="text-white" size={32} />
+              </div>
             </div>
             <div>
               <h1 className={`text-xl font-bold  ${darkMode ? 'text-white': 'text-gray-900'}`}>ExpenseTracker</h1>

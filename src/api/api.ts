@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { showSuccess, showError } from '../utils/toast';
-
+export const BASE_URL = import.meta.env.VITE_API_URL
 const api = axios.create({
-  baseURL: 'http://localhost:5000', // Backend URL
+  baseURL: BASE_URL, // Backend URL
+  
 });
 
 api.interceptors.request.use(config => {

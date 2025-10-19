@@ -18,17 +18,17 @@ export const generateId = (): string => {
 
 export const getCategorySummary = (expenses: Expense[]): CategorySummary[] => {
   const categoryTotals = expenses.reduce((acc, expense) => {
-    acc[expense.categoryId] = (acc[expense.categoryId] || 0) + expense.amount;
+    acc[expense.categoryId] = (acc[expense.categoryId] || 0) + Number(expense.amount);
     return acc;
   }, {} as Record<string, number>);
 
-  const total = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+  const total = expenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
   
   return Object.entries(categoryTotals).map(([category, amount]) => ({
     category,
-    total: amount,
+    amount: amount,
     count: expenses.filter(e => e.categoryId === category).length,
-    percentage: total > 0 ? (total / total) * 100 : 0,
+    percentage: amount > 0 ? (amount / total) * 100 : 0,
   }));
 };
 

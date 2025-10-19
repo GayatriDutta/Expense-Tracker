@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -8,7 +7,6 @@ import {
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Layout from "./components/Layout";
-import AuthForm from "./components/AuthForm";
 import Dashboard from "./pages/Dashboard";
 import ExpenseForm from "./components/ExpenseForm";
 import ExpenseList from "./components/ExpenseList";
@@ -19,18 +17,10 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import ErrorBoundary from "./components/ErrorBoundary";
 import "./toastStyles.css";
+import LandingPage from "./pages/LandingPage";
 
 const AuthPage: React.FC = () => {
-  const [mode, setMode] = useState<"login" | "register">("login");
-
-  useEffect(()=>{
-    setMode("login");
-  })
-  return (
-    <AuthForm
-      mode={mode}
-    />
-  );
+  return <LandingPage  />;
 };
 
 const AppContent: React.FC = () => {
@@ -54,7 +44,6 @@ const AppContent: React.FC = () => {
         <Layout>
           <Routes>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/login" element={<AuthForm mode="login" />} />
             <Route
               path="/add"
               element={
@@ -66,11 +55,7 @@ const AppContent: React.FC = () => {
             <Route
               path="/analytics"
               element={
-                <ExpenseList expenses={[]} onEdit={function (): void {
-                  throw new Error("Function not implemented.");
-                } } onDelete={function (): void {
-                  throw new Error("Function not implemented.");
-                } }/>
+                <ExpenseList/>
               }
             />
             <Route path="/settings" element={<div>Settings Page</div>} />

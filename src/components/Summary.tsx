@@ -1,27 +1,41 @@
-import React from 'react';
-import { DollarSign, TrendingUp, Calendar, PieChart } from 'lucide-react';
-import type { Expense } from '../types';
-import { formatCurrency, getCategorySummary } from '../utils';
+import React, { useEffect, useState } from "react";
+import { DollarSign, TrendingUp, Calendar, PieChart } from "lucide-react";
+import type { CategorySummary, Expense } from "../types";
+import { formatCurrency, getCategorySummary } from "../utils";
 
 interface SummaryProps {
   expenses: Expense[];
 }
 
 const Summary: React.FC<SummaryProps> = ({ expenses }) => {
-  const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
-  const avgExpense = expenses.length > 0 ? totalExpenses / expenses.length : 0;
-  const categorySummary = getCategorySummary(expenses);
-  
-  const thisMonth = new Date().toISOString().slice(0, 7);
-  const thisMonthExpenses = expenses.filter(
-    expense => expense.date.startsWith(thisMonth)
-  );
-  const thisMonthTotal = thisMonthExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+    const [totalExpenses, setTotalExpenses] = useState<number>(0);
+    const [avgExpense, setAvgExpense] = useState<number>(0);
+    const [thisMonthTotal, setThisMonthTotal] = useState<number>(0);
+    const [topCategory, setTopCategory] = useState<CategorySummary>();
+    const [thisMonthExpenses, setThisMonthExpenses] = useState<Expense[]>([]);
 
-  const topCategory = categorySummary.reduce(
-    (max, category) => category.total > max.total ? category : max,
-    { category: 'None', total: 0, count: 0, percentage: 0 }
-  );
+  useEffect(() => {
+    const totalExpenses = expenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
+    setTotalExpenses(totalExpenses);
+    const avgExpense =
+      expenses.length > 0 ? totalExpenses / expenses.length : 0;
+    setAvgExpense(avgExpense);
+
+    const thisMonth = new Date().toISOString().slice(0, 7);
+    const thisMonthExpenses = expenses.filter((expense) =>
+      expense.date.startsWith(thisMonth)
+    );
+    setThisMonthExpenses(thisMonthExpenses);
+    const thisMonthTotal = thisMonthExpenses.reduce(
+      (sum, expense) => sum + Number(expense.amount),
+      0
+    );
+    setThisMonthTotal(thisMonthTotal);
+
+
+    setTopCategory(topCategory);
+
+  }, [expenses]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
@@ -38,7 +52,7 @@ const Summary: React.FC<SummaryProps> = ({ expenses }) => {
           </div>
         </div>
         <p className="text-xs text-gray-500 mt-2">
-          {expenses.length} transaction{expenses.length !== 1 ? 's' : ''}
+          {expenses.length} transaction{expenses.length !== 1 ? "s" : ""}
         </p>
       </div>
 
@@ -55,7 +69,8 @@ const Summary: React.FC<SummaryProps> = ({ expenses }) => {
           </div>
         </div>
         <p className="text-xs text-gray-500 mt-2">
-          {thisMonthExpenses.length} transaction{thisMonthExpenses.length !== 1 ? 's' : ''}
+          {thisMonthExpenses.length} transaction
+          {thisMonthExpenses.length !== 1 ? "s" : ""}
         </p>
       </div>
 
@@ -71,9 +86,7 @@ const Summary: React.FC<SummaryProps> = ({ expenses }) => {
             <TrendingUp className="text-blue-600" size={24} />
           </div>
         </div>
-        <p className="text-xs text-gray-500 mt-2">
-          Per transaction
-        </p>
+        <p className="text-xs text-gray-500 mt-2">Per transaction</p>
       </div>
 
       <div className="bg-white rounded-lg shadow-md p-6">
@@ -81,16 +94,13 @@ const Summary: React.FC<SummaryProps> = ({ expenses }) => {
           <div>
             <p className="text-sm font-medium text-gray-600">Top Category</p>
             <p className="text-lg font-bold text-purple-600 truncate">
-              {topCategory.category !== 'None' ? topCategory.category : 'None'}
+              {topCategory?.category !== "None" ? topCategory?.category : "None"}
             </p>
           </div>
           <div className="p-3 bg-purple-100 rounded-full">
             <PieChart className="text-purple-600" size={24} />
           </div>
         </div>
-        <p className="text-xs text-gray-500 mt-2">
-          {topCategory.total > 0 ? formatCurrency(topCategory.total) : 'No expenses'}
-        </p>
       </div>
     </div>
   );
