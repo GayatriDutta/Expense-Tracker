@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { DollarSign, TrendingUp, Calendar, PieChart } from "lucide-react";
 import type { CategorySummary, Expense } from "../types";
-import { formatCurrency, getCategorySummary } from "../utils";
+import { formatCurrency } from "../utils";
 
 interface SummaryProps {
   expenses: Expense[];
