@@ -1,0 +1,33 @@
+/* Container moves toast to horizontal center (top by default) */
+.Toastify__toast-container--top-center {
+  top: 50%;
+  transform: translateY(-50%); /* center vertically */
+}
+
+/* Toast background and styling */
+.custom-toast {
+  background: #1e1e1e !important; /* dark contrasting background */
+  color: #ffffff !important;      /* text color */
+  font-weight: 500;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.3);
+  min-width: 300px;
+  text-align: center;
+}
+
+.custom-toast-body {
+  margin: 0;
+  padding: 0;
+}
+
+
+.Toastify__toast--success {
+  background: #bbed06 !important; /* green success */
+  color: #0f0101 !important;
+}
+
+.Toastify__toast--error {
+  background: #d98082 !important; /* red error */
+  color: #0f0202 !important;
+}

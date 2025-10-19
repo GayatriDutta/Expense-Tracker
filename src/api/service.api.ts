@@ -11,7 +11,7 @@ export const registerAPICall = async (
   email: string,
   password: string
 ) => {
-  const res = await api.post("/users/register", { name, email, password });
+  const res = await api.post("/auth/register", { name, email, password });
   return res.data;
 };
 

@@ -15,7 +15,10 @@ import ExpenseList from "./components/ExpenseList";
 import RedirectLogin from "./pages/Redirect";
 import './App.css';
 import Budgets from "./pages/Budgets";
-
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
+import ErrorBoundary from "./components/ErrorBoundary";
+import "./toastStyles.css";
 
 const AuthPage: React.FC = () => {
   const [mode, setMode] = useState<"login" | "register">("login");
@@ -82,11 +85,21 @@ const AppContent: React.FC = () => {
 
 function App() {
   return (
+    <ErrorBoundary>
     <Router>
+      <ToastContainer toastClassName="custom-toast" // add custom class
+        className="custom-toast-body"
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar
+        closeOnClick
+        pauseOnHover
+        draggable/>
       <AuthProvider>
         <AppContent />
       </AuthProvider>
     </Router>
+    </ErrorBoundary>
   );
 }
 export default App;

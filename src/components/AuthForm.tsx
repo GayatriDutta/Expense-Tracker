@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { PiggyBank, Eye, EyeOff } from "lucide-react";
+import { PiggyBank, Eye, EyeOff, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import { loginAPICall, registerAPICall } from "../api/service.api";
+import { showSuccess } from "../utils/toast";
 
 interface AuthFormProps {
   mode: "login" | "register";
@@ -26,24 +28,26 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
     setLoading(true);
     setError("");
 
-    try {
-      if (pageMode === "login") {
+    if (pageMode === "login") {
+      try {
         await login(formData.email, formData.password);
         setError("");
         navigate("/dashboard");
-      } else {
-        await register(formData.name, formData.email, formData.password);
-        setMessage("Account Created! Please login.");
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      try {
+        await registerAPICall(formData.name, formData.email, formData.password);
+        showSuccess("Account Created! Please login.");     
+      } finally {
         setFormData({
           email: "",
           password: "",
           name: "",
         });
+        setLoading(false);
       }
-    } catch (error: any) {
-      setError(error.response?.data?.message || "An error occurred");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -52,8 +56,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
   };
 
   return (
-    <div className="min-h-screen background from-blue-50 to-indigo-100 flex items-center justify-center p-4"  
-    >
+    <div className="min-h-screen background from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white/50 rounded-2xl shadow-xl p-8">
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
