@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PiggyBank, Check, Star, ArrowRight, BarChart3, Shield, Zap, CreditCard, TrendingUp } from 'lucide-react';
+import { PiggyBank, Check, ArrowRight, BarChart3, Shield, Zap, CreditCard, TrendingUp } from 'lucide-react';
 import AuthForm from '../components/AuthForm';
 
 
